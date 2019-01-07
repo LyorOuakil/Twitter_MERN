@@ -27,17 +27,6 @@ var Users = require("./routes/Users");
 
 app.use("/users", Users);
 
-app.get("/", (req, res) => {
-  res.send("Hello Samy");
-});
-
-app.get("/registration", (req, res) => {
-  res.send("Registration Page");
-});
-app.get("/login", (req, res) => {
-  res.send("Login Page");
-});
-
 /*-------------------------LISTEN ON PORT SERVER-------------------------------*/
 app.listen(port, () => {
   console.log(`Listening on port ${port} ... `);

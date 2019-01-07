@@ -14,13 +14,13 @@ users.post("/register", (req, res) => {
   const userData = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    email: req.body.password,
+    email: req.body.email,
     created: today
   };
-
   User.findOne({
     email: req.body.email
   })
+
     .then(user => {
       if (!user) {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -39,6 +39,26 @@ users.post("/register", (req, res) => {
     })
     .catch(err => {
       res.send("error : " + err);
+    });
+});
+
+users.get("/profile", (req, res) => {
+  var decoded = jwt.verify(
+    req.headers["authorization"],
+    process.env.SECRET_KEY
+  );
+  User.findOne({
+    _id: decoded._id
+  })
+    .then(user => {
+      if (user) {
+        res.json(user);
+      } else {
+        res.send("User does not exists");
+      }
+    })
+    .catch(err => {
+      res.send("error: " + err);
     });
 });
 
