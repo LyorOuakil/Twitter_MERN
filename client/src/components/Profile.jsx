@@ -7,7 +7,8 @@ class Profile extends Component {
     this.state = {
       first_name: "",
       last_name: "",
-      email: ""
+      email: "",
+      errors: {}
     };
   }
 
@@ -31,15 +32,15 @@ class Profile extends Component {
           <table className="table-col-md-6 mx-auto">
             <tbody>
               <tr>
-                <td>First Name</td>
+                <td>First Name : </td>
                 <td>{this.state.first_name}</td>
               </tr>
               <tr>
-                <td>Last Name</td>
+                <td>Last Name : </td>
                 <td>{this.state.last_name}</td>
               </tr>
               <tr>
-                <td>email</td>
+                <td>email : </td>
                 <td>{this.state.email}</td>
               </tr>
             </tbody>

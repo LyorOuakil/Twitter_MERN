@@ -9,34 +9,6 @@ users.use(cors());
 
 process.env.SECRET_KEY = "secret";
 
-users.post("/login", (req, res) => {
-  User.findOne({
-    email: req.body.mail
-  })
-    .then(user => {
-      if (user) {
-        if (bcrypt.compareSync(req.body.password, user.password)) {
-          //Passwords Match
-          const payload = {
-            _id: user._id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email
-          };
-          let token = jwt.sign(payload, process.env.SECRET_KEY, {
-            expiresIn: 1440
-          });
-          res.send(token);
-        }
-      } else {
-        res.json({ error: "User does" });
-      }
-    })
-    .catch(err => {
-      res.send("error: " + err);
-    });
-});
-
 users.post("/register", (req, res) => {
   const today = new Date();
   const userData = {
@@ -67,6 +39,36 @@ users.post("/register", (req, res) => {
     })
     .catch(err => {
       res.send("error : " + err);
+    });
+});
+
+users.post("/login", (req, res) => {
+  User.findOne({
+    email: req.body.email
+  })
+    .then(user => {
+      if (user) {
+        if (bcrypt.compareSync(req.body.password, user.password)) {
+          //Passwords Match
+          const payload = {
+            _id: user._id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email
+          };
+          let token = jwt.sign(payload, process.env.SECRET_KEY, {
+            expiresIn: 1440
+          });
+          res.send(token);
+        } else {
+          res.json({ error: user });
+        }
+      } else {
+        res.json({ error: user });
+      }
+    })
+    .catch(err => {
+      res.send("error: " + err);
     });
 });
 
