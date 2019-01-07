@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react";
+import { Link, withRouter } from "react-router-dom";
 
 class Navbar extends Component {
   logOut(e) {
@@ -30,7 +30,7 @@ class Navbar extends Component {
           </Link>
         </li>
         <li className="nav-item">
-          <a href="" onClick={this.logOut.bind(this)} className="nav-link">
+          <a onClick={this.logOut.bind(this)} className="nav-link">
             Logout
           </a>
         </li>
@@ -39,25 +39,30 @@ class Navbar extends Component {
 
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded">
-        <button className="navbar-toggler">
-          type="button" data-toggle="collapse" data-tarket="#navbar1"
-          aria-controls="navbar1" aria-expanded="false" aria-lable="Toggle
-          navigation"
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-tarket="#navbar1"
+          aria-controls="navbar1"
+          aria-expanded="false"
+          aria-label="Togglenavigation"
+        >
           <span className="navbar-toggler-icon" />
-          <div
-            className="collapse navbar-collapse justify-content-md-center"
-            id="navbar1"
-          >
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Home
-                </Link>
-              </li>
-            </ul>
-            {localStorage.usertoken ? userLink : loginRegLink}
-          </div>
         </button>
+        <div
+          className="collapse navbar-collapse justify-content-md-center"
+          id="navbar1"
+        >
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">
+                Home
+              </Link>
+            </li>
+          </ul>
+          {localStorage.usertoken ? userLink : loginRegLink}
+        </div>
       </nav>
     );
   }
