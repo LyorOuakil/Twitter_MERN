@@ -92,4 +92,44 @@ users.get("/profile", (req, res) => {
     });
 });
 
+users.delete("/:userId", (req, res) => {
+  User.remove({ _id: req.params.userId })
+    .exec()
+    .then(result => {
+      return res.status(200).json({ message: "User deleted" });
+    })
+    .catch(err => next(err));
+});
+
+users.put("/:userId", (req, res) => {
+  console.log("YOOO");
+  const userData = {
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    email: req.body.email
+  };
+  User.findById({
+    _id: userId
+  })
+    .then(user => {
+      if (!user) {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          userData.password = hash;
+          User.create(userData)
+            .then(user => {
+              res.json({ status: user.email + " account modified!" });
+            })
+            .catch(err => {
+              res.send("error: " + err);
+            });
+        });
+      } else {
+        res.json({ error: "User already exists" });
+      }
+    })
+    .catch(err => {
+      res.send("error : " + err);
+    });
+});
+
 module.exports = users;

@@ -5,6 +5,7 @@ class Login extends Component {
   constructor() {
     super();
     this.state = {
+      first_name: "",
       email: "",
       password: ""
     };
@@ -19,6 +20,7 @@ class Login extends Component {
     e.preventDefault();
 
     const user = {
+      first_name: this.state.first_name,
       email: this.state.email,
       password: this.state.password
     };

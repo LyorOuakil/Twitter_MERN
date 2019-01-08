@@ -20,11 +20,14 @@ export const login = user => {
       password: user.password
     })
     .then(res => {
-      console.log(res.data);
       localStorage.setItem("usertoken", res.data);
       return res.data;
     })
     .catch(err => {
       console.log(err);
     });
+};
+
+export const onDelete = userId => {
+  return axios.delete("http://127.0.0.1:3000/users/" + userId).then(res => {});
 };
