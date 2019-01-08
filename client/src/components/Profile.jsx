@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import jwt_decode from "jwt-decode";
 import { onDelete } from "./UserFunction";
+import { updateUser } from "./UserFunction";
 
 class Profile extends Component {
   constructor() {
@@ -10,16 +11,45 @@ class Profile extends Component {
       first_name: "",
       last_name: "",
       email: "",
+      password: "",
       errors: {}
     };
+    this.onChange = this.onChange.bind(this);
   }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+  userUpdate = e => {
+    e.preventDefault();
+    const user = {
+      _id: this.state._id,
+      first_name: this.state.first_name,
+      last_name: this.state.last_name,
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    console.log("Account modified");
+    updateUser(user, this.state._id).then(res => {
+      if (res) {
+        console.log("account modified");
+        this.props.history.push("/profile");
+      }
+    });
+  };
 
   userDelete = e => {
     e.preventDefault();
-    onDelete(this.state._id).then(res => {
-      localStorage.removeItem("usertoken");
-      this.props.history.push("/");
-    });
+    const confirm = window.confirm(
+      "Do you really want to delete your account ?"
+    );
+    if (confirm === true) {
+      onDelete(this.state._id).then(res => {
+        localStorage.removeItem("usertoken");
+        this.props.history.push("/");
+      });
+    }
   };
 
   componentDidMount() {
@@ -45,21 +75,22 @@ class Profile extends Component {
             <input
               name="first_name"
               onChange={this.onChange}
-              placeholder={this.state.first_name}
+              value={this.state.first_name}
             />
             <input
               name="last_name"
               onChange={this.onChange}
-              placeholder={this.state.last_name}
+              value={this.state.last_name}
             />
             <input
               name="email"
               onChange={this.onChange}
-              placeholder={this.state.email}
+              value={this.state.email}
             />
           </div>
         </div>
         <button onClick={this.userDelete.bind(this)}>DELETE ACCOUNT</button>
+        <button onClick={this.userUpdate.bind(this)}>Update Account</button>
       </div>
     );
   }

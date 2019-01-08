@@ -31,3 +31,19 @@ export const login = user => {
 export const onDelete = userId => {
   return axios.delete("http://127.0.0.1:3000/users/" + userId).then(res => {});
 };
+
+export const updateUser = (userModified, userId) => {
+  console.log("hello");
+  console.log(userId);
+  return axios
+    .put("http://127.0.0.1:3000/users/" + userId, {
+      first_name: userModified.first_name,
+      last_name: userModified.last_name,
+      email: userModified.email,
+      password: "test"
+    })
+    .then(res => {
+      localStorage.setItem("usertoken", JSON.stringify(res.data));
+      return res.data;
+    });
+};
