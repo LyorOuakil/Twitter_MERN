@@ -93,43 +93,52 @@ users.get("/profile", (req, res) => {
 });
 
 users.delete("/:userId", (req, res) => {
-  User.remove({ _id: req.params.userId })
-    .exec()
-    .then(result => {
-      return res.status(200).json({ message: "User deleted" });
-    })
-    .catch(err => next(err));
+  var decoded = jwt.verify(
+    req.headers["authorization"],
+    process.env.SECRET_KEY
+  );
+  console.log(decoded);
+  if (decoded) {
+    User.remove({ _id: decoded._id })
+      .exec()
+      .then(result => {
+        return res.status(200).json({ message: "User deleted" });
+      })
+      .catch(err => next(err));
+  }
 });
 
 users.put("/:userId", (req, res) => {
-  console.log("YOOO");
-  const userData = {
+  var decoded = jwt.verify(
+    req.headers["authorization"],
+    process.env.SECRET_KEY
+  );
+  console.log(req.headers.authorization);
+  // const userData = {
+  //   first_name: req.body.first_name,
+  //   last_name: req.body.last_name,
+  //   email: req.body.email
+  // };
+
+  const payload = {
+    _id: req.params._id,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email
   };
-  User.findById({
-    _id: userId
-  })
-    .then(user => {
-      if (!user) {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-          userData.password = hash;
-          User.create(userData)
-            .then(user => {
-              res.json({ status: user.email + " account modified!" });
-            })
-            .catch(err => {
-              res.send("error: " + err);
-            });
-        });
-      } else {
-        res.json({ error: "User already exists" });
-      }
-    })
-    .catch(err => {
-      res.send("error : " + err);
-    });
+  let token = jwt.sign(payload, process.env.SECRET_KEY, {
+    expiresIn: 1440
+  });
+
+  User.update(
+    { _id: req.params.userId },
+    {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email
+    }
+  ).exec();
+  res.send(token);
 });
 
 module.exports = users;

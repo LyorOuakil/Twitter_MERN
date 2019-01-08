@@ -5,6 +5,7 @@ import Landing from "./components/Landing";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
+import Tweet from "./components/Tweet";
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/users/:id" component={Profile} />
+            <Route exact path="/message" component={Tweet} />
           </div>
         </div>
       </Router>

@@ -24,7 +24,9 @@ mongoose
   .catch(err => console.log(err));
 
 var Users = require("./routes/Users");
+var Message = require("./routes/Messages");
 
+app.use("/messages", Message);
 app.use("/users", Users);
 
 /*-------------------------LISTEN ON PORT SERVER-------------------------------*/
