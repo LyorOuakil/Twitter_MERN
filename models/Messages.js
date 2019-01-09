@@ -5,6 +5,9 @@ const MessageSchema = new Schema({
   userId: {
     type: String
   },
+  username: {
+    type: String
+  },
   message: {
     type: String,
     required: true

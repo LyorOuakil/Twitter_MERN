@@ -97,7 +97,6 @@ users.delete("/:userId", (req, res) => {
     req.headers["authorization"],
     process.env.SECRET_KEY
   );
-  console.log(decoded);
   if (decoded) {
     User.remove({ _id: decoded._id })
       .exec()

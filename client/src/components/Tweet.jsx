@@ -7,8 +7,11 @@ class Tweet extends Component {
   constructor() {
     super();
     this.state = {
+      messageId: "",
+      tokenId: "",
       _userId: "",
-      message: ""
+      username: "",
+      message: []
     };
     this.onChange = this.onChange.bind(this);
   }
@@ -22,26 +25,48 @@ class Tweet extends Component {
     const decoded = jwt_decode(token);
     const post = {
       _userId: decoded._id,
+      _username: decoded.first_name,
       message: this.state.message
     };
-    publishPost(post).then(res => {
-      if (res) {
-        console.log("CONGRATS");
-      }
+    publishPost(post).then(result => {
+      this.componentDidMount();
     });
   };
 
   componentDidMount() {
+    const token = localStorage.usertoken;
+    const decoded = jwt_decode(token);
     getAllMessages().then(res => {
       if (res) {
         const listMessages = res.data.map(d => (
-          <li key={d._id}>{d.message}</li>
+          <div key={d._id} className="card">
+            <div className="card-header bg-primary text-light">
+              <strong>{d.username}</strong> a tweeté :{" "}
+            </div>
+            <div className="card-body">
+              <li className="list-group-item">{d.message}</li>
+              <footer className="blockquote-footer text-right">
+                {d.date}
+                <br />
+                {this.state.tokenId === d.userId ? (
+                  <button>Delete your message</button>
+                ) : (
+                  <button style={{ display: "none" }}>not worked </button>
+                )}
+              </footer>
+            </div>
+          </div>
         ));
+        const test = res.data.map(d => {
+          return d._id;
+        });
         this.setState({
+          messageId: test,
+          tokenId: decoded._id,
           messages: listMessages
         });
-        console.log(listMessages);
       }
+      console.log(this.state.messageId);
     });
   }
 
@@ -65,7 +90,7 @@ class Tweet extends Component {
               </button>
             </div>
           </div>
-          <ul>{this.state.messages}</ul>
+          <ul className="list-group list-group-flush">{this.state.messages}</ul>
         </div>
       </React.Fragment>
     );
