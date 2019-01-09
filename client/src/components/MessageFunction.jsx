@@ -15,3 +15,10 @@ export const publishPost = newPost => {
 export const getAllMessages = () => {
   return axios.get("http://127.0.0.1:3000/messages/message");
 };
+
+export const onDelete = messageId => {
+  console.log("Here in Ondelete");
+  return axios
+    .delete("http://127.0.0.1:3000/messages/" + messageId)
+    .then(res => {});
+};

@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { publishPost } from "./MessageFunction";
 import { getAllMessages } from "./MessageFunction";
+import { onDelete } from "./MessageFunction";
 import jwt_decode from "jwt-decode";
 
 class Tweet extends Component {
   constructor() {
     super();
+    this.componentDidMount();
     this.state = {
       messageId: "",
       tokenId: "",
@@ -18,6 +20,7 @@ class Tweet extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+  /* Add tweet function -> userId given thanks to the token */
 
   publishTweet = e => {
     e.preventDefault();
@@ -33,6 +36,19 @@ class Tweet extends Component {
     });
   };
 
+  deleteTweet = messageId => e => {
+    e.preventDefault();
+    const confirm = window.confirm(
+      "Do you really want to delete this comment ?"
+    );
+    if (confirm === true) {
+      console.log("This was validated");
+      onDelete(messageId).then(res => {
+        this.componentDidMount();
+      });
+    }
+  };
+
   componentDidMount() {
     const token = localStorage.usertoken;
     const decoded = jwt_decode(token);
@@ -46,10 +62,12 @@ class Tweet extends Component {
             <div className="card-body">
               <li className="list-group-item">{d.message}</li>
               <footer className="blockquote-footer text-right">
-                {d.date}
+                {d.userId}
                 <br />
                 {this.state.tokenId === d.userId ? (
-                  <button>Delete your message</button>
+                  <button onClick={this.deleteTweet(d._id)}>
+                    Delete your message
+                  </button>
                 ) : (
                   <button style={{ display: "none" }}>not worked </button>
                 )}
@@ -57,16 +75,12 @@ class Tweet extends Component {
             </div>
           </div>
         ));
-        const test = res.data.map(d => {
-          return d._id;
-        });
         this.setState({
-          messageId: test,
           tokenId: decoded._id,
           messages: listMessages
         });
+        console.log(this.state.tokenId);
       }
-      console.log(this.state.messageId);
     });
   }
 

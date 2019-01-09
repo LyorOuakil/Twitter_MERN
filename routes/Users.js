@@ -112,13 +112,11 @@ users.put("/:userId", (req, res) => {
     req.headers["authorization"],
     process.env.SECRET_KEY
   );
-  console.log(req.headers.authorization);
   // const userData = {
   //   first_name: req.body.first_name,
   //   last_name: req.body.last_name,
   //   email: req.body.email
   // };
-
   const payload = {
     _id: req.params._id,
     first_name: req.body.first_name,

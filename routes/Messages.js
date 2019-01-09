@@ -18,7 +18,6 @@ messages.post("/message", (req, res) => {
   };
   Message.create(messageData).then(message => {
     res.json({ status: "Message created " });
-    console.log(message);
   });
 });
 
@@ -38,9 +37,9 @@ messages.delete("/:messageId", (req, res) => {
   Message.remove({ _id: req.params.messageId })
     .exec()
     .then(result => {
+      console.log("worked ? ");
       return res.status(200).json({ message: "Message deleted" });
-    })
-    .catch(err => next(err));
+    });
 });
 
 module.exports = messages;
