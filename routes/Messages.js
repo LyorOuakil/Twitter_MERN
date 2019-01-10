@@ -37,9 +37,17 @@ messages.delete("/:messageId", (req, res) => {
   Message.remove({ _id: req.params.messageId })
     .exec()
     .then(result => {
-      console.log("worked ? ");
       return res.status(200).json({ message: "Message deleted" });
     });
+});
+
+messages.put("/:messageId", (req, res) => {
+  Message.update(
+    { _id: req.params.messageId },
+    {
+      message: req.body.message
+    }
+  ).exec();
 });
 
 module.exports = messages;

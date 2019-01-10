@@ -42,11 +42,17 @@ class Tweet extends Component {
       "Do you really want to delete this comment ?"
     );
     if (confirm === true) {
-      console.log("This was validated");
       onDelete(messageId).then(res => {
         this.componentDidMount();
       });
     }
+  };
+
+  editTweet = messageId => e => {
+    e.preventDefault();
+    window.confirm(
+      "hello, t'as cru que ca allait éditer des trucs ? Naif que tu es ... "
+    );
   };
 
   componentDidMount() {
@@ -60,14 +66,29 @@ class Tweet extends Component {
               <strong>{d.username}</strong> a tweeté :{" "}
             </div>
             <div className="card-body">
-              <li className="list-group-item">{d.message}</li>
+              {this.state.tokenId === d.userId ? (
+                <input
+                  type="text"
+                  onChange={this.onChange}
+                  name="editText"
+                  value={d.message}
+                />
+              ) : (
+                <li className="list-group-item">{d.message}</li>
+              )}
+
               <footer className="blockquote-footer text-right">
-                {d.userId}
+                {d.date}
                 <br />
                 {this.state.tokenId === d.userId ? (
                   <button onClick={this.deleteTweet(d._id)}>
                     Delete your message
                   </button>
+                ) : (
+                  <button style={{ display: "none" }}>not worked </button>
+                )}
+                {this.state.tokenId === d.userId ? (
+                  <button onClick={this.editTweet(d._id)}>Edit</button>
                 ) : (
                   <button style={{ display: "none" }}>not worked </button>
                 )}
@@ -79,7 +100,6 @@ class Tweet extends Component {
           tokenId: decoded._id,
           messages: listMessages
         });
-        console.log(this.state.tokenId);
       }
     });
   }

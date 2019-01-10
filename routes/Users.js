@@ -92,19 +92,23 @@ users.get("/profile", (req, res) => {
     });
 });
 
+users.get("/users", (req, res) => {
+  User.find({}).exec(function(err, users) {
+    if (err) {
+      res.send("something went wrong");
+      next();
+    }
+    res.send(users);
+  });
+});
+
 users.delete("/:userId", (req, res) => {
-  var decoded = jwt.verify(
-    req.headers["authorization"],
-    process.env.SECRET_KEY
-  );
-  if (decoded) {
-    User.remove({ _id: decoded._id })
-      .exec()
-      .then(result => {
-        return res.status(200).json({ message: "User deleted" });
-      })
-      .catch(err => next(err));
-  }
+  User.remove({ _id: req.params.userId })
+    .exec()
+    .then(result => {
+      return res.status(200).json({ message: "User deleted" });
+    })
+    .catch(err => next(err));
 });
 
 users.put("/:userId", (req, res) => {

@@ -17,8 +17,18 @@ export const getAllMessages = () => {
 };
 
 export const onDelete = messageId => {
-  console.log("Here in Ondelete");
   return axios
     .delete("http://127.0.0.1:3000/messages/" + messageId)
     .then(res => {});
+};
+
+export const updateMessage = (messageId, message) => {
+  console.log("message dans MessageFunction : " + message);
+  return axios
+    .put("http://127.0.0.1:3000/messages/" + messageId, {
+      message: message.message
+    })
+    .then(res => {
+      return res.data;
+    });
 };

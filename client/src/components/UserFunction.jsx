@@ -29,12 +29,11 @@ export const login = user => {
 };
 
 export const onDelete = userId => {
+  console.log(userId);
   return axios.delete("http://127.0.0.1:3000/users/" + userId).then(res => {});
 };
 
 export const updateUser = (userModified, userId) => {
-  console.log("hello");
-  console.log(userId);
   return axios
     .put(
       "http://127.0.0.1:3000/users/" + userId,
@@ -54,4 +53,8 @@ export const updateUser = (userModified, userId) => {
       localStorage.setItem("usertoken", res.data);
       return res.data;
     });
+};
+
+export const getTwittos = () => {
+  return axios.get("http://127.0.0.1:3000/users/users");
 };
