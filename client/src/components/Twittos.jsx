@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { getTwittos } from "./UserFunction";
+import { getTwittos, addFollowers } from "./UserFunction";
+import jwt_decode from "jwt-decode";
 
 class TwittosUser extends Component {
   constructor() {
@@ -12,6 +13,12 @@ class TwittosUser extends Component {
       users: []
     };
   }
+  addFollowers = userFollowedId => e => {
+    e.preventDefault();
+    const token = localStorage.usertoken;
+    const decoded = jwt_decode(token);
+    addFollowers(decoded._id, userFollowedId);
+  };
 
   componentDidMount() {
     getTwittos().then(res => {
@@ -22,7 +29,7 @@ class TwittosUser extends Component {
               <strong>{d.first_name}</strong>
             </div>
             <div className="card-body">
-              <button>Follow</button>
+              <button onClick={this.addFollowers(d._id)}>Follow</button>
               <button>Unfollow</button>
             </div>
           </div>
