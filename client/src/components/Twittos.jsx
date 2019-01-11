@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getTwittos, addFollowers } from "./UserFunction";
+import { getTwittos, addFollowers, unFollow } from "./UserFunction";
 import jwt_decode from "jwt-decode";
 
 class TwittosUser extends Component {
@@ -10,7 +10,9 @@ class TwittosUser extends Component {
       first_name: "",
       last_name: "",
       email: "",
-      users: []
+      users: [],
+      Followers: [],
+      Followings: []
     };
   }
   addFollowers = userFollowedId => e => {
@@ -18,9 +20,20 @@ class TwittosUser extends Component {
     const token = localStorage.usertoken;
     const decoded = jwt_decode(token);
     addFollowers(decoded._id, userFollowedId);
+    console.log(userFollowedId);
+    this.componentWillMount();
+  };
+  removeFollowers = userFollowedId => e => {
+    const token = localStorage.usertoken;
+    const decoded = jwt_decode(token);
+    unFollow(decoded._id, userFollowedId);
+    window.confirm("You have unfollowed : " + userFollowedId);
+    console.log(userFollowedId);
+    console.log(this.state.Followings);
+    this.componentWillMount();
   };
 
-  componentDidMount() {
+  componentWillMount() {
     getTwittos().then(res => {
       if (res) {
         const listUsers = res.data.map(d => (
@@ -30,7 +43,7 @@ class TwittosUser extends Component {
             </div>
             <div className="card-body">
               <button onClick={this.addFollowers(d._id)}>Follow</button>
-              <button>Unfollow</button>
+              <button onClick={this.removeFollowers(d._id)}>Unfollow</button>
             </div>
           </div>
         ));
@@ -39,7 +52,6 @@ class TwittosUser extends Component {
         });
       }
     });
-    console.log(this.state.users);
   }
   render() {
     return (

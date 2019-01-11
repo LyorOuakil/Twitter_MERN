@@ -58,42 +58,47 @@ class Tweet extends Component {
   componentDidMount() {
     const token = localStorage.usertoken;
     const decoded = jwt_decode(token);
+    console.log(decoded.Followers);
     getAllMessages().then(res => {
       if (res) {
         const listMessages = res.data.map(d => (
           <div key={d._id} className="card">
-            <div className="card-header bg-primary text-light">
-              <strong>{d.username}</strong> a tweeté :{" "}
-            </div>
-            <div className="card-body">
-              {this.state.tokenId === d.userId ? (
-                <input
-                  type="text"
-                  onChange={this.onChange}
-                  name="editText"
-                  value={d.message}
-                />
-              ) : (
-                <li className="list-group-item">{d.message}</li>
-              )}
-
-              <footer className="blockquote-footer text-right">
-                {d.date}
-                <br />
-                {this.state.tokenId === d.userId ? (
-                  <button onClick={this.deleteTweet(d._id)}>
-                    Delete your message
-                  </button>
-                ) : (
-                  <button style={{ display: "none" }}>not worked </button>
-                )}
-                {this.state.tokenId === d.userId ? (
-                  <button onClick={this.editTweet(d._id)}>Edit</button>
-                ) : (
-                  <button style={{ display: "none" }}>not worked </button>
-                )}
-              </footer>
-            </div>
+            {decoded.Followers.indexOf(d.userId) > -1 ? (
+              <React.Fragment>
+                <strong>{d.username}</strong> a tweeté :
+                <div className="card bg-primary">
+                  <div className="card-body">
+                    {this.state.tokenId === d.userId ? (
+                      <input
+                        type="text"
+                        onChange={this.onChange}
+                        name="editText"
+                        value={d.message}
+                      />
+                    ) : (
+                      <li className="list-group-item">{d.message}</li>
+                    )}
+                    <footer className="blockquote-footer text-right">
+                      {d.date} <br />{" "}
+                      {this.state.tokenId === d.userId ? (
+                        <button onClick={this.deleteTweet(d._id)}>
+                          Delete your message{" "}
+                        </button>
+                      ) : (
+                        <button style={{ display: "none" }}>not worked </button>
+                      )}
+                      {this.state.tokenId === d.userId ? (
+                        <button onClick={this.editTweet(d._id)}>Edit</button>
+                      ) : (
+                        <p style={{ display: "none" }}> Not worked </p>
+                      )}
+                    </footer>
+                  </div>
+                </div>
+              </React.Fragment>
+            ) : (
+              <div style={{ display: "none" }}> </div>
+            )}
           </div>
         ));
         this.setState({

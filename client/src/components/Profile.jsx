@@ -61,7 +61,6 @@ class Profile extends Component {
       last_name: decoded.last_name,
       email: decoded.email
     });
-    console.log(this.state._id);
   }
 
   render() {

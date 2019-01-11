@@ -54,7 +54,8 @@ users.post("/login", (req, res) => {
             _id: user._id,
             first_name: user.first_name,
             last_name: user.last_name,
-            email: user.email
+            email: user.email,
+            Followers: user.Followers
           };
           let token = jwt.sign(payload, process.env.SECRET_KEY, {
             expiresIn: 1440
@@ -138,13 +139,36 @@ users.put("/:userId", (req, res) => {
 });
 
 users.put("/follows/:id", (req, res) => {
-  console.log(req.body.Followers);
+  console.log("hey");
   User.update(
     { _id: req.params.id },
     {
       $push: { Followers: req.body.Followers }
     }
-  ).exec();
+  ).then(res => {
+    User.update(
+      { _id: req.body.Followers },
+      {
+        $push: { Followings: req.params.id }
+      }
+    ).exec();
+  });
+});
+
+users.put("/unfollows/:id", (req, res) => {
+  User.update(
+    { _id: req.params.id },
+    {
+      $pull: { Followers: req.body.Followers }
+    }
+  ).then(res => {
+    User.update(
+      { _id: req.body.Followers },
+      {
+        $pull: { Followings: req.params.id }
+      }
+    ).exec();
+  });
 });
 
 module.exports = users;

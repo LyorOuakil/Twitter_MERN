@@ -60,17 +60,22 @@ export const getTwittos = () => {
 };
 
 export const addFollowers = (userId, userFollowedId) => {
-  console.log(
-    "Hello voici l'id du user : " +
-      userId +
-      " Et l'id de celui qui va le follow : " +
-      userFollowedId
-  );
   return axios
     .put("http://127.0.0.1:3000/users/follows/" + userId, {
       Followers: userFollowedId
     })
     .then(res => {
       console.log("success");
+    });
+};
+
+export const unFollow = (userId, userFollowedId) => {
+  console.log(userFollowedId);
+  return axios
+    .put("http://127.0.0.1:3000/users/unfollows/" + userId, {
+      Followers: userFollowedId
+    })
+    .then(res => {
+      console.log("Other succes");
     });
 };
